@@ -11,9 +11,9 @@ def mk_movieList(movie_folder):
     files = [x for x in files if x[0] != '.']
     return files
  
-def mk_starts_ends(wk_dir,movie,noise,duration):
+def mk_starts_ends(wk_dir,movie):
     os.chdir(wk_dir)
-    output = subprocess.run(["ffmpeg","-i",movie,"-af", "silencedetect=noise=-",noise,"dB:d=",duration,"-f","null","-"], stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    output = subprocess.run(["ffmpeg","-i",movie,"-af", "silencedetect=noise=-30dB:duration=2","-f","null","-"], stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     print(output)
     s = str(output)
     lines = s.split('\\n')
@@ -58,11 +58,8 @@ def join_movie(movie_files,out_path):
 #ディレクトリの指定
 print("元動画のディレクトリを絶対パスで指定してください ex. /Users/kishi/Downloads/")
 movie_folder = input()
-print("-何dBの時にカットしますか? ex. -60dB -> 60")
-noise = input()
-print("何秒無音の時にカットしますか? ex. 2s -> 2")
-duration = input()
-movie_files = movie_folder + "*.mp4"
+print("動画を出力したいフォルダの絶対パス*.mp4を入力してください ex. /Users/kishi/Downloads/*.mp4")
+movie_files = input()
 out_path = "join_out.mp4"
  
 os.chdir(movie_folder)
@@ -76,7 +73,7 @@ movie_list = mk_movieList(movie_folder)
  
 for movie in movie_list:
     print(movie)
-    starts_ends = mk_starts_ends(wk_dir,movie,noise,duration)
+    starts_ends = mk_starts_ends(wk_dir,movie)
     print(starts_ends)
     mk_jumpcut(wk_dir,movie,starts_ends)
     join_movie(movie_files,out_path)
