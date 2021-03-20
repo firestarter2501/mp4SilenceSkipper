@@ -46,14 +46,14 @@ def mk_jumpcut(wk_dir,movie,starts_ends):
 def join_movie(movie_files,out_path):
     videos = glob.glob(movie_files)
     print(videos)
- 
+
     #List of join targets
     with open("JumpCut/tmp.txt","w") as fp:
         lines = [f"file '{os.path.split(line)[1]}'" for line in videos]
         #Prevented from becoming 1,10,11,~, Sorted
         lineList = sorted(lines,key=len)
         fp.write("\n".join(lineList))
- 
+        
     output = subprocess.run(["ffmpeg","-f","concat","-i","JumpCut/tmp.txt","-c","copy",out_path],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     print(output)
 
@@ -63,16 +63,16 @@ movie_folder = input()
 print("Enter the absolute path of the folder where you want to output the video *.mp4 ex. /Users/kishi/Downloads/*.mp4")
 movie_files = input()
 out_path = "join_out.mp4"
- 
+
 os.chdir(movie_folder)
 wk_dir = os.path.abspath(".")
 try:
     os.mkdir("JumpCut")
 except:
     pass
- 
+
 movie_list = mk_movieList(movie_folder)
- 
+
 for movie in movie_list:
     print(movie)
     starts_ends = mk_starts_ends(wk_dir,movie)
