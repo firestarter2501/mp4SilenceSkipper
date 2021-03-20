@@ -1,3 +1,6 @@
+#210320 mp4から無音部分を除去するプログラム/佐賀大19238032石塚快@firestarter2501
+#実行する前にFFmpegをインストールしてPATHを通すこと!!
+
 import subprocess
 import os
 import glob
@@ -8,9 +11,9 @@ def mk_movieList(movie_folder):
     files = [x for x in files if x[0] != '.']
     return files
  
-def mk_starts_ends(wk_dir,movie):
+def mk_starts_ends(wk_dir,movie,noise,duration):
     os.chdir(wk_dir)
-    output = subprocess.run(["ffmpeg","-i",movie,"-af", "silencedetect=noise=-33dB:d=0.6","-f","null","-"], stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    output = subprocess.run(["ffmpeg","-i",movie,"-af", "silencedetect=noise=-",noise,"dB:d=",duration,"-f","null","-"], stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     print(output)
     s = str(output)
     lines = s.split('\\n')
@@ -53,10 +56,13 @@ def join_movie(movie_files,out_path):
     print(output)
  
 #ディレクトリの指定
-print("元動画のディレクトリを絶対パスで指定してください")
+print("元動画のディレクトリを絶対パスで指定してください ex. /Users/kishi/Downloads/")
 movie_folder = input()
-print("分割した動画が格納されるディレクトリの絶対パス/*.mp4を入力してください")
-movie_files = input()
+print("-何dBの時にカットしますか? ex. -60dB -> 60")
+noise = input()
+print("何秒無音の時にカットしますか? ex. 2s -> 2")
+duration = input()
+movie_files = movie_folder + "*.mp4"
 out_path = "join_out.mp4"
  
 os.chdir(movie_folder)
@@ -70,7 +76,7 @@ movie_list = mk_movieList(movie_folder)
  
 for movie in movie_list:
     print(movie)
-    starts_ends = mk_starts_ends(wk_dir,movie)
+    starts_ends = mk_starts_ends(wk_dir,movie,noise,duration)
     print(starts_ends)
     mk_jumpcut(wk_dir,movie,starts_ends)
     join_movie(movie_files,out_path)
