@@ -1,5 +1,6 @@
 #210320 mp4から無音部分を除去するプログラム/佐賀大19238032石塚快@firestarter2501
 #実行する前にFFmpegをインストールしてPATHを通すこと!!
+#noiseとdurationをて適宜変更して使用すること
 
 import subprocess
 import os
