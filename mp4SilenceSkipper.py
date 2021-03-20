@@ -28,7 +28,7 @@ def mk_starts_ends(wk_dir,movie):
                     time_list.append(float((words[i+1]).replace('\\r',''))+2)
                 if "silence_end" in words[i]:
                     time_list.append(float((words[i+1]).replace('\\r',''))-2)
- 
+
     print(time_list)
     starts_ends = list(zip(*[iter(time_list)]*2))
     return starts_ends
@@ -53,7 +53,7 @@ def join_movie(movie_files,out_path):
         #Prevented from becoming 1,10,11,~, Sorted
         lineList = sorted(lines,key=len)
         fp.write("\n".join(lineList))
-        
+
     output = subprocess.run(["ffmpeg","-f","concat","-i","JumpCut/tmp.txt","-c","copy",out_path],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     print(output)
 
