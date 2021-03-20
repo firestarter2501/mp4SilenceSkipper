@@ -1,6 +1,6 @@
 #210320 mp4から無音部分を除去するプログラム/佐賀大19238032石塚快@firestarter2501
 #実行する前にFFmpegをインストールしてPATHを通すこと!!
-#noiseとdurationをて適宜変更して使用すること
+#noise,duration等を適宜変更して使用すること
 
 import subprocess
 import os
@@ -24,9 +24,9 @@ def mk_starts_ends(wk_dir,movie):
             words = line.split(" ")
             for i in range(len(words)):
                 if "silence_start" in words[i]:
-                    time_list.append(float((words[i+1]).replace('\\r','')))
+                    time_list.append(float((words[i+1]).replace('\\r',''))+2)
                 if "silence_end" in words[i]:
-                    time_list.append(float((words[i+1]).replace('\\r','')))
+                    time_list.append(float((words[i+1]).replace('\\r',''))-2)
  
     print(time_list)
     starts_ends = list(zip(*[iter(time_list)]*2))
